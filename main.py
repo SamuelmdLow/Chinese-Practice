@@ -9,7 +9,7 @@ class Word:
         self.Chinese = Chinese
         self.English = English
 
-        self.LastUsed = 0
+        self.LastUsed = -100
 
         self.TimesAnswered = 0
         self.TimesCorrect = 0
@@ -26,11 +26,16 @@ class Words:
 
     def getNewWord(self):
         for word in self.List:
-            word.RankingValue = word.Accuracy / (round - word.LastUsed)
+            gap = round - word.LastUsed
+            if gap > 4:
+                word.RankingValue = word.Accuracy / gap
+            else:
+                word.RankingValue = 100
+
         self.List.sort(key=myFunc)
         return self.List[0]
 
-terms = open("terms.csv", "r", encoding="utf-8").readlines()
+terms = open("chinese.csv", "r", encoding="utf-8").readlines()
 ChineseWords = Words()
 for term in terms:
     term = term.replace("\n", "")
@@ -38,18 +43,18 @@ for term in terms:
     newWord = Word(row[0], row[1])
     ChineseWords.List.append(newWord)
 
-for i in ChineseWords.List:
-    print(i.Chinese)
-
 shuffle(ChineseWords.List)
 round = 1
 
 while True:
     thing   = ChineseWords.getNewWord()
     answer  = input(thing.Chinese + ": ")
-
+    print(answer)
     if answer.lower() == thing.English.lower():
         thing.TimesCorrect += 1
+        print("Correct!")
+    else:
+        print("Nope sorry the answer is: " + thing.English)
 
     thing.TimesAnswered += 1
     thing.updateAccuracy()
@@ -57,6 +62,4 @@ while True:
 
     round += 1
 
-    for i in ChineseWords.List:
-        print(i.Accuracy)
 
