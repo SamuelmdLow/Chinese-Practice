@@ -44,15 +44,17 @@ class Words:
 
 
 while True:
-    p = Path(r'databases').glob('**/*')
+    p = Path(r'C:\Users\tubbd\PycharmProjects\Chinese-Practice\databases').glob('**/*')
     i = 1
-    files = [file.name for file in list(p)]
+    files = [file for file in p]
     for file in files:
-        print(str(i) + ": " + file.replace(".csv", ""))
+        print(str(i) + ": " + file.name.replace(".csv", ""))
         i = i + 1
     CHOICE = int(input("Which file would you like to study: "))
 
-    filename = "databases\\" + files[CHOICE - 1]
+    # filename = "databases" + x + files[CHOICE - 1]
+    print("opening " + files[CHOICE - 1].name + "...")
+    filename = files[CHOICE - 1]
 
     terms = open(filename, "r", encoding="utf-8").readlines()
     ChineseWords = Words()
@@ -65,11 +67,18 @@ while True:
     shuffle(ChineseWords.List)
     round = 1
 
+    isEnglish = input("Practice english meaning (1) or pinyin/character (2)?") == "1"
+
     while ChineseWords.aveAccuracy() < 0.95:
         thing = ChineseWords.getNewWord()
         answer = input(thing.Chinese + ": ")
         print(thing.English + " (" + thing.PinYin + ")")
-        if answer.lower() == thing.English.lower():
+        if isEnglish == True:
+            realAnswer = thing.English.lower()
+        else:
+            realAnswer = thing.Chinese.lower()
+
+        if answer.lower() == realAnswer:
             thing.TimesCorrect += 1
             print("Correct!")
         else:
