@@ -80,7 +80,7 @@ while True:
 
         if answer.lower() == realAnswer:
             thing.TimesCorrect += 1
-            print("Correct!")
+            print("Correct! You are at " + str(ChineseWords.aveAccuracy() * 100) + "% accuracy!")
         else:
             print("Nope sorry!")
 
